@@ -17,7 +17,7 @@ import {
   Textarea, Checkbox
 } from "@nextui-org/react";
 
-import { Layout } from "./Layout.js";
+import { Layout } from "../component/Layout.js";
 
 export default function Home() {
   const [myCompanyInput, setMyCompanyInput] = useState("");
