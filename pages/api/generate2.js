@@ -29,7 +29,10 @@ export default async function (req, res) {
   try {
     const completion = await openai.createChatCompletion({
       model: "gpt-3.5-turbo",
-      messages: [{ role: "user", content: generatePrompt(req.body) }],
+      messages: [
+        { role: "user", content: generatePrompt(req.body) },
+        // { role: "user", content: generatePrompt2(req.body) },
+      ],
       //max_tokens: 3000,
       // temperature: 0.6,
     });
@@ -61,10 +64,10 @@ function generatePrompt(body) {
     promptText += `Sender Name: ${body.myNameText}\n`;
   }
   if (body.reCompanyText) {
-    promptText += `Recepient Company: ${body.reCompanyText}\n`;
+    promptText += `Recipient Company: ${body.reCompanyText}\n`;
   }
   if (body.reNameText) {
-    promptText += `Recepient Name: ${body.reNameText}\n`;
+    promptText += `Recipient Name: ${body.reNameText}\n`;
   }
   if (body.emailBodyText) {
     promptText += `${body.emailBodyText}\n`;
@@ -72,6 +75,27 @@ function generatePrompt(body) {
   // purpose: ${body.purposeText},
   // questions: ${body.questionText}`;
   console.log(promptText);
+  return promptText;
+
+  //   const capitalizedAnimal =
+  //     animal[0].toUpperCase() + animal.slice(1).toLowerCase();
+
+  //   return `Suggest three names for an animal that is a superhero.
+
+  // Animal: Cat
+  // Names: Captain Sharpclaw, Agent Fluffball, The Incredible Feline
+  // Animal: Dog
+  // Names: Ruff the Protector, Wonder Canine, Sir Barks-a-Lot
+  // Animal: ${capitalizedAnimal}
+  // Names:`;
+}
+
+function generatePrompt2(body) {
+  let promptText = `answer as below
+Subject:
+Greetings:
+Main Text:
+Closing Remarks:`
   return promptText;
 
   //   const capitalizedAnimal =

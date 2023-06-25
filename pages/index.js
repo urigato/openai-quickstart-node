@@ -14,7 +14,7 @@ import {
   Container,
   Grid,
   Input,
-  Textarea, Checkbox
+  Textarea, Checkbox, Row, Col, Loading
 } from "@nextui-org/react";
 
 import { Layout } from "../component/Layout.js";
@@ -29,25 +29,26 @@ export default function Home() {
   // const [questionInput, setQuestionInput] = useState("");
   const [introInput, setIntroInput] = useState(true);
   const [result, setResult] = useState();
+  const [isDisable, setIsDisable] = useState(false);
 
   async function onSubmit(event) {
     event.preventDefault();
+    setIsDisable(true);
     try {
       const response = await fetch("/api/generate2", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
+        body: introInput ? JSON.stringify({
           myCompanyText: myCompanyInput,
           myNameText: myNameInput,
           reCompanyText: reCompanyInput,
           reNameText: reNameInput,
           emailBodyText: emailBodyInput,
           // purposeText: purposeInput,
-          // questionText: questionInput,
-          introFlag: introInput,
-        }),
+          // questionText: questionInput
+        }) : JSON.stringify({emailBodyText: emailBodyInput}),
       });
 
       const data = await response.json();
@@ -71,6 +72,7 @@ export default function Home() {
       console.error(error);
       alert(error.message);
     }
+    setIsDisable(false);
   }
 
   return (
@@ -108,100 +110,126 @@ export default function Home() {
           {/*</Navbar.Content>*/}
         </Navbar>
 
-        <Container>
+        <Container lg>
           {/* <img src="/logo.png" className={styles.icon} /> */}
           <Text h4>
             비즈니스 영문 이메일을 빠르게 작성하세요~!
           </Text>
           <Grid.Container gap={2} justify="center">
-            <Grid sm>
-              <form onSubmit={onSubmit}>
-                <Input
-                    type="text"
-                    bordered
-                    fullWidth
-                    label="작성자 회사명"
-                    name="myCompany"
-                    placeholder="회사 이름"
-                    value={myCompanyInput}
-                    onChange={(e) => setMyCompanyInput(e.target.value)}
-                />
-                <Input
-                    required
-                       bordered
-                    fullWidth
-                       type="text"
-                       label="작성자 이름"
-                       name="myName"
-                       placeholder="작성자 이름"
-                       value={myNameInput}
-                       onChange={(e) => setMyNameInput(e.target.value)}
-                />
-                <Input
-                    type="text"
-                    bordered
-                    fullWidth
-                    label="수신자 회사명"
-                    name="reCompany"
-                    placeholder="회사 이름"
-                    value={reCompanyInput}
-                    onChange={(e) => setReCompanyInput(e.target.value)}
-                />
-                <Input required
-                       bordered
-                       fullWidth
-                       type="text"
-                       label="수신자 이름"
-                       name="reName"
-                       placeholder="수신자 이름"
-                       value={reNameInput}
-                       onChange={(e) => setReNameInput(e.target.value)}
-                />
-                <Textarea
-                    required
-                    fullWidth
-                    bordered
-                    rows="20"
-                    label="내용"
-                    name="emailBody"
-                    placeholder="목적이나 질문을 작성하세요."
-                    value={emailBodyInput}
-                    onChange={(e) => setEmailBodyInput(e.target.value)}
-                />
-                {/* <h5>질문</h5>
-              <textarea
-                rows="10"
-                type="text"
-                name="question"
-                placeholder="질문을 입력하세요."
-                value={questionInput}
-                onChange={(e) => setQuestionInput(e.target.value)}
-              /> */}
-                <Checkbox
-                    defaultSelected
-                    size="sm"
-                    fullWidth
-                    checked={introInput}
-                    name="intro"
-                    onChange={(e) => setIntroInput(e.target.value)}>인사말 추가</Checkbox>
-
-                <Button type="submit">영문 이메일 생성</Button>
-
-              </form>
-            </Grid>
-            <Grid sm>
-              <Textarea
-                  label="영문 이메일 결과"
-                  readOnly
-                  bordered
+          <Grid sm={6}>
+            <form onSubmit={onSubmit}>
+              <Checkbox
+                  defaultSelected
+                  size="sm"
                   fullWidth
-                  rows="30"
-                  className={styles.result}
-                  value={result}
-              ></Textarea>
-            </Grid>
-          </Grid.Container>
+                  checked={introInput}
+                  name="intro"
+                  onChange={setIntroInput}>인사말 추가</Checkbox>
+              <Grid.Container gap={1}>
+                <Grid xs={6}>
+                  <Input
+                      disabled={!introInput}
+                      type="text"
+                      bordered
+                      fullWidth
+                      status="primary"
+                      labelLeft="작성자 회사명"
+                      name="myCompany"
+                      placeholder="회사 이름"
+                      value={myCompanyInput}
+                      onChange={(e) => setMyCompanyInput(e.target.value)}
+                  />
+                </Grid>
+                <Grid xs={6}>
+                  <Input
+                      disabled={!introInput}
+                      required
+                      bordered
+                      fullWidth
+                      status="primary"
+                      type="text"
+                      labelLeft="작성자 이름"
+                      name="myName"
+                      placeholder="작성자 이름"
+                      value={myNameInput}
+                      onChange={(e) => setMyNameInput(e.target.value)}
+                  />
+                </Grid>
+                <Grid xs={6}>
+                  <Input
+                      disabled={!introInput}
+                      type="text"
+                      bordered
+                      fullWidth
+                      status="primary"
+                      labelLeft="수신자 회사명"
+                      name="reCompany"
+                      placeholder="회사 이름"
+                      value={reCompanyInput}
+                      onChange={(e) => setReCompanyInput(e.target.value)}
+                  />
+                </Grid>
+                <Grid xs={6}>
+                  <Input
+                      disabled={!introInput}
+                      required
+                      bordered
+                      fullWidth
+                      type="text"
+                      status="primary"
+                      labelLeft="수신자 이름"
+                      name="reName"
+                      placeholder="수신자 이름"
+                      value={reNameInput}
+                      onChange={(e) => setReNameInput(e.target.value)}
+                  />
+                </Grid>
+                <Grid xs={12}>
+                  <Textarea
+                      required
+                      fullWidth
+                      bordered
+                      rows={15}
+                      label="내용"
+                      status="primary"
+                      name="emailBody"
+                      placeholder="목적이나 질문을 작성하세요."
+                      value={emailBodyInput}
+                      onChange={(e) => setEmailBodyInput(e.target.value)}
+                  />
+                </Grid>
+                <Grid xs={12}>
+                  <Button css={{width:"100%"}} type="submit" size="xl" disabled={isDisable}>{!isDisable ? '영문 이메일 생성' :
+                      <Loading type="points" color="currentColor" size="sm" />}</Button>
+                </Grid>
+              </Grid.Container>
 
+              {/* <h5>질문</h5>
+            <textarea
+              rows="10"
+              type="text"
+              name="question"
+              placeholder="질문을 입력하세요."
+              value={questionInput}
+              onChange={(e) => setQuestionInput(e.target.value)}
+            /> */}
+
+
+
+            </form>
+          </Grid>
+          <Grid sm={6}>
+            <Textarea
+                label="영문 이메일 결과"
+                readOnly
+                bordered
+                fullWidth
+                rows="25"
+                className={styles.result}
+                value={result}
+            ></Textarea>
+          </Grid>
+          </Grid.Container>
         </Container>
       </Layout>
 
