@@ -35,20 +35,21 @@ export default function Home() {
     event.preventDefault();
     setIsDisable(true);
     try {
-      const response = await fetch("/api/generate2", {
+      const response = await fetch("/api/generate3", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: introInput ? JSON.stringify({
+        body: JSON.stringify({
           myCompanyText: myCompanyInput,
           myNameText: myNameInput,
           reCompanyText: reCompanyInput,
           reNameText: reNameInput,
           emailBodyText: emailBodyInput,
+          introText: introInput,
           // purposeText: purposeInput,
           // questionText: questionInput
-        }) : JSON.stringify({emailBodyText: emailBodyInput}),
+        }),
       });
 
       const data = await response.json();
@@ -90,7 +91,7 @@ export default function Home() {
               Morse Toss
             </Text>
             <Spacer x={0.2} />
-            <Badge color="error">Bata</Badge>
+            <Badge color="error">Beta</Badge>
           </Navbar.Brand>
           {/*<Navbar.Content hideIn="xs">*/}
           {/*  <Navbar.Link href="#">Features</Navbar.Link>*/}
@@ -112,77 +113,89 @@ export default function Home() {
 
         <Container lg>
           {/* <img src="/logo.png" className={styles.icon} /> */}
-          <Text h4>
-            비즈니스 영문 이메일을 빠르게 작성하세요~!
-          </Text>
+          <Spacer y={1} />
+          <Text h4>Ai가 작성해주는 영문 이메일</Text>
           <Grid.Container gap={2} justify="center">
-          <Grid sm={6}>
+          <Grid xs={12} sm={6}>
             <form onSubmit={onSubmit}>
-              <Checkbox
-                  defaultSelected
-                  size="sm"
-                  fullWidth
-                  checked={introInput}
-                  name="intro"
-                  onChange={setIntroInput}>인사말 추가</Checkbox>
               <Grid.Container gap={1}>
-                <Grid xs={6}>
-                  <Input
-                      disabled={!introInput}
-                      type="text"
-                      bordered
+                <Grid xs={12}>
+                  <Checkbox
+                      defaultSelected
+                      size="sm"
                       fullWidth
-                      status="primary"
-                      labelLeft="작성자 회사명"
-                      name="myCompany"
-                      placeholder="회사 이름"
-                      value={myCompanyInput}
-                      onChange={(e) => setMyCompanyInput(e.target.value)}
-                  />
+                      checked={introInput}
+                      name="intro"
+                      onChange={setIntroInput}>첫 소개 인사말 포함</Checkbox>
                 </Grid>
-                <Grid xs={6}>
+                <Grid xs={12}>
+                  <Text size={14}>발신</Text>
+                </Grid>
+                <Grid xs={12} sm={6}>
                   <Input
-                      disabled={!introInput}
+                      // disabled={!introInput}
                       required
                       bordered
                       fullWidth
                       status="primary"
                       type="text"
-                      labelLeft="작성자 이름"
+                      labelLeft="이름"
                       name="myName"
-                      placeholder="작성자 이름"
+                      // placeholder="작성자 이름"
                       value={myNameInput}
                       onChange={(e) => setMyNameInput(e.target.value)}
                   />
                 </Grid>
-                <Grid xs={6}>
+                <Grid xs={12} sm={6}>
                   <Input
-                      disabled={!introInput}
+                      // disabled={!introInput}
                       type="text"
                       bordered
                       fullWidth
                       status="primary"
-                      labelLeft="수신자 회사명"
-                      name="reCompany"
-                      placeholder="회사 이름"
-                      value={reCompanyInput}
-                      onChange={(e) => setReCompanyInput(e.target.value)}
+                      labelLeft="소속"
+                      name="myCompany"
+                      // placeholder="회사 이름"
+                      value={myCompanyInput}
+                      onChange={(e) => setMyCompanyInput(e.target.value)}
                   />
                 </Grid>
-                <Grid xs={6}>
+                <Spacer y={1} />
+                <Grid xs={12}>
+                  <Text size={14}>수신</Text>
+                </Grid>
+                <Grid xs={12} sm={6}>
                   <Input
-                      disabled={!introInput}
+                      // disabled={!introInput}
                       required
                       bordered
                       fullWidth
                       type="text"
                       status="primary"
-                      labelLeft="수신자 이름"
+                      labelLeft="이름"
                       name="reName"
-                      placeholder="수신자 이름"
+                      // placeholder="수신자 이름"
                       value={reNameInput}
                       onChange={(e) => setReNameInput(e.target.value)}
                   />
+                </Grid>
+                <Grid xs={12} sm={6}>
+                  <Input
+                      // disabled={!introInput}
+                      type="text"
+                      bordered
+                      fullWidth
+                      status="primary"
+                      labelLeft="소속"
+                      name="reCompany"
+                      // placeholder="이름"
+                      value={reCompanyInput}
+                      onChange={(e) => setReCompanyInput(e.target.value)}
+                  />
+                </Grid>
+                <Spacer y={1} />
+                <Grid xs={12}>
+                  <Text size={14}>내용</Text>
                 </Grid>
                 <Grid xs={12}>
                   <Textarea
@@ -190,7 +203,6 @@ export default function Home() {
                       fullWidth
                       bordered
                       rows={15}
-                      label="내용"
                       status="primary"
                       name="emailBody"
                       placeholder="목적이나 질문을 작성하세요."
@@ -198,6 +210,7 @@ export default function Home() {
                       onChange={(e) => setEmailBodyInput(e.target.value)}
                   />
                 </Grid>
+                <Spacer y={1} />
                 <Grid xs={12}>
                   <Button css={{width:"100%"}} type="submit" size="xl" disabled={isDisable}>{!isDisable ? '영문 이메일 생성' :
                       <Loading type="points" color="currentColor" size="sm" />}</Button>
@@ -218,16 +231,25 @@ export default function Home() {
 
             </form>
           </Grid>
-          <Grid sm={6}>
-            <Textarea
-                label="영문 이메일 결과"
-                readOnly
-                bordered
-                fullWidth
-                rows="25"
-                className={styles.result}
-                value={result}
-            ></Textarea>
+          <Grid xs={12} sm={6}>
+            <Grid.Container gap={1}>
+
+              <Spacer y={1.4} />
+              <Grid xs={12}>
+                <Text size={14}>영문 이메일 결과</Text>
+              </Grid>
+              <Grid xs={12}>
+                <Textarea
+                    // label="영문 이메일 결과"
+                    readOnly
+                    bordered
+                    fullWidth
+                    rows="30"
+                    // className={styles.result}
+                    value={result}
+                ></Textarea>
+              </Grid>
+            </Grid.Container>
           </Grid>
           </Grid.Container>
         </Container>

@@ -56,7 +56,7 @@ export default async function (req, res) {
 }
 
 function generatePrompt(body) {
-  let promptText = `Please make a standard email in high quality English based on the following information.\n`
+  let promptText = `Please make in high quality English based on the following information.\n`
   if (body.myCompanyText) {
     promptText += `My company name: ${body.myCompanyText}\n`;
   }
