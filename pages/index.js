@@ -55,10 +55,16 @@ export default function Home() {
       const data = await response.json();
 
       if (response.status !== 200) {
-        throw (
-          data.error ||
-          new Error(`Request failed with status ${response.status}`)
-        );
+        if (response.status === 429 || response.status === 403 || response.status === 500 || response.status === 502 || response.status === 503 || response.status === 504) {
+            throw new Error(
+                `${response.status}: 사용량이 많습니다. 잠시후 다시 시도해주세요.`
+            );
+        } else {
+          throw (
+              data.error ||
+              new Error(`Request failed with status ${response.status}`)
+          );
+        }
       }
       console.log(data.result);
       setResult(data.result);
